@@ -14,12 +14,10 @@ class ViewController: UIViewController {
     @IBOutlet weak var webview: WKWebView!
     override func viewDidLoad() {
         super.viewDidLoad()
-    
         let url = URL(string: "https://http.cat/200")
         let request = URLRequest(url:url!)
         webview.load(request)
     }
-
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
