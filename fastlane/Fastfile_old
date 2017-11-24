@@ -1,0 +1,60 @@
+# Change the syntax highlighting to Ruby
+# All lines starting with a # are ignored when running `fastlane`
+
+# If you want to automatically update fastlane if a new version is available:
+# update_fastlane
+
+# This is the minimum version number required.
+# Update this, if you use features of a newer version
+#fastlane_version "2.64.0"
+
+default_platform :ios
+
+platform :ios do
+  before_all do
+    # ENV["SLACK_URL"] = "https://hooks.slack.com/services/..."
+  end
+  desc "Runs all the tests"
+  lane :test do
+    gym(task: "test")
+  end
+  desc "New Beta Build to HockeyApp"
+  lane :ios_beta do
+    gym(task: "assemble", build_type: "release")
+    hockey(
+      api_token: "bb63768f191246f9bd7a2ba8dc0e1c6e",
+      #apk: "/Users/paul.hoess/jenkins_haus/workspace/app.android.fastlane.deploy.beta/app/build/outputs/apk/release/app-release-unsigned.apk",
+      release_type: "0",
+      repository_url: "ssh://git@git.aldi-international.com:45481/atp2/ahead-ci-mobile.git",
+      build_server_url: "https://192.168.99.100"
+    )
+    # sh "your_script.sh"
+    # You can also use other beta testing services here
+  end
+  desc "Deploy a new version to Apple Store"
+  lane :deploy do
+    gym(task: "assembleRelease")
+    supply
+  end
+  # You can define as many lanes as you want
+  after_all do |lane|
+    # This block is called, only if the executed lane was successful
+
+    # slack(
+    #   message: "Successfully deployed new App Update."
+    # )
+  end
+
+  error do |lane, exception|
+    # slack(
+    #   message: exception.message,
+    #   success: false
+    # )
+  end
+end
+
+# More information about multiple platforms in fastlane: https://github.com/fastlane/fastlane/blob/master/fastlane/docs/Platforms.md
+# All available actions: https://docs.fastlane.tools/actions
+
+# fastlane reports which actions are used. No personal data is recorded.
+# Learn more at https://docs.fastlane.tools/#metrics

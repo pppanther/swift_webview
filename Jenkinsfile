@@ -1,7 +1,12 @@
-#!groovy
-
-node {
-    stage 'Checkout and Setup'
-    checkout scm
-    docker run -d dtr.ci-aldi.com/fastlane:2.61.0-alpine3.6 fastlane ios jenkins_init
+pipeline {
+    agent none
+    stages {
+        stage('fastlane build w gym') {
+            agent { docker 'dtr.ci-aldi.com/fastlane:slim' }
+            steps {
+                //tool name: 'GRADLE431', type: 'gradle'
+                sh 'bundler exec fastlane gym scan'
+            }
+        }
+    }
 }
