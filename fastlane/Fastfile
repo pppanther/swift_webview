@@ -1,16 +1,22 @@
-lane :beta do
-  scan
-  gym(scheme: "MyApp")
-  HockeyApp
-end
+default_platform :ios
 
-# error block is executed when a error occurs
-error do |lane, exception|
-  slack(
-    # message with short human friendly message
-    message: exception.to_s,
-    success: false,
-    # Output containing extended log output
-    payload: { "Output" => exception.error_info.to_s }
-  )
-end
+platform :ios do
+  before_all do
+    # ENV["SLACK_URL"] = "https://hooks.slack.com/services/..."
+  end
+
+  desc "Runs all the tests"
+  lane :test do
+    gym(task: "test")
+  end
+
+  desc "New Beta Build to HockeyApp"
+  lane :beta do
+    gym(task: "assemble", build_type: "release")
+    hockey(
+      api_token: "bb63768f191246f9bd7a2ba8dc0e1c6e",
+      #apk: "/Users/paul.hoess/jenkins_haus/workspace/app.android.fastlane.deploy.beta/app/build/outputs/apk/release/app-release-unsigned.apk",
+      release_type: "0",
+      repository_url: "ssh://git@git.aldi-international.com:45481/atp2/ahead-ci-mobile.git",
+      build_server_url: "https://192.168.99.100"
+    )
