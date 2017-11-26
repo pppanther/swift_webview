@@ -29,22 +29,11 @@ xcode-select --install
 </table>
 
 # Available Actions
-## iOS
-### ios test
+### beta
 ```
-fastlane ios test
+fastlane beta
 ```
-Runs all the tests
-### ios ios_beta
-```
-fastlane ios ios_beta
-```
-New Beta Build to HockeyApp
-### ios deploy
-```
-fastlane ios deploy
-```
-Deploy a new version to Apple Store
+
 
 ----
 
